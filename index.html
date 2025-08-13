@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport"
+        content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no" />
+  <title>Sense • Alarm · Stopwatch · Timer · Weather</title>
+  <meta name="theme-color" content="#0b1220" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="logo">🧭</span>
+      <span class="title">Sense</span>
+    </div>
+    <div id="modeBadge" class="badge">—</div>
+  </header>
+
+  <main id="view" class="view"></main>
+
+  <button id="enableMotionBtn" class="motion-btn" hidden>
+    Enable motion access
+  </button>
+
+  <nav class="legend">
+    <span class="chip">Portrait ↑ = ⏰ Alarm</span>
+    <span class="chip">Portrait ↓ = ⌛ Timer</span>
+    <span class="chip">Landscape → = ⏱ Stopwatch</span>
+    <span class="chip">Landscape ← = 🌦 Weather</span>
+  </nav>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
