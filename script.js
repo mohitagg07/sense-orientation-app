@@ -5,6 +5,10 @@ let stopwatchInterval, stopwatchTime = 0;
 let timerInterval, timerTime = 0;
 let alarmInterval;
 
+// Track current mode to prevent unnecessary reloads
+let currentMode = null;
+let orientationTimeout;
+
 // Replace with your API key from https://home.openweathermap.org/api_keys
 const API_KEY = "d28ddd879b19d6f865d804c007403af5";
 
@@ -125,26 +129,38 @@ function showWeather() {
   }
 }
 
-// --- Orientation Detection ---
-window.addEventListener("deviceorientation", (e) => {
-  const beta = e.beta;  // front/back tilt
-  const gamma = e.gamma; // left/right tilt
-
-  if (Math.abs(gamma) < 30) {
-    // Portrait modes
-    if (beta > 0 && beta < 100) {
-      showAlarm();
-    } else {
-      showTimer();
-    }
-  } else {
-    // Landscape modes
-    if (gamma > 0) {
-      showStopwatch();
-    } else {
-      showWeather();
-    }
+// --- Mode switching with debounce ---
+function setMode(mode) {
+  if (mode === currentMode) return; // Skip if already in this mode
+  currentMode = mode;
+  switch (mode) {
+    case "alarm": showAlarm(); break;
+    case "timer": showTimer(); break;
+    case "stopwatch": showStopwatch(); break;
+    case "weather": showWeather(); break;
   }
+}
+
+window.addEventListener("deviceorientation", (e) => {
+  clearTimeout(orientationTimeout);
+  orientationTimeout = setTimeout(() => {
+    const beta = e.beta;  // front/back tilt
+    const gamma = e.gamma; // left/right tilt
+
+    if (Math.abs(gamma) < 30) {
+      if (beta > 0 && beta < 100) {
+        setMode("alarm");
+      } else {
+        setMode("timer");
+      }
+    } else {
+      if (gamma > 0) {
+        setMode("stopwatch");
+      } else {
+        setMode("weather");
+      }
+    }
+  }, 200); // 200ms debounce
 });
 
 // --- Request Motion Permission (iOS requirement) ---
